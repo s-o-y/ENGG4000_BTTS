@@ -1,3 +1,0 @@
-Placeholder to create file structure.
-
-Replace with actual scripts and delete this file once done.
