@@ -1,5 +1,5 @@
 // Author: Zachary Demerson
-// Last Updated: March 11 2024
+// Last Updated: April 2nd 2024
 // Description:
 //  Code for automatic focus adjustment system. Implemented on OpenRB-150
 //  Receives serial data from Raspberry Pi 4 and uses it to control
@@ -38,14 +38,15 @@ void setup() {
 
   DEBUG_SERIAL.begin(115200);
   RPI_SERIAL.begin(115200);
+  
   return;
 }
 
 // new_position = Desired position of the motor (Range 0 - 4095, but limited by movement range of lens ring). 
 // Positive = counter clockwise (focusing far), Negative = clockwise (focusing near)
 int setMotorPosition(int new_position){
-  int max_position = 3396; // Focused at infinity
-  int min_position = 2553; // Furthest near position without hitting bracket
+  int max_position = 3648; // Focused at infinity
+  int min_position = 2409 ; // Furthest near position without hitting bracket
   int present_position;
   
   if(new_position > max_position){
@@ -84,12 +85,12 @@ void loop() {
   bool newData = false;         // flag for if a new message has been fully received
   int i = 0;                    // iterator for receivedMessage
   uint16_t receivedInt = 9999;  // Received message converted from hex to int (9999 as a flag)
-
+  
   /*
   // For Debugging:
   int present_position = dxl.getPresentPosition(DXL_ID);
   DEBUG_SERIAL.print("Current Motor Position: ");
-  DEBUG_SERIAL.println(present_position); //Far: 2854, Near: 2553
+  DEBUG_SERIAL.println(present_position); //Far: 2854, Near: 2409 
   */
   
   // If theres a message in the buffer and we havent finished reading the data yet
@@ -97,13 +98,13 @@ void loop() {
     incomingByte = RPI_SERIAL.read();               // Read the message as a singular byte      
     receivedMessage[i] = incomingByte;              // Store byte in array
 
-    
+    /*
     // For debugging:
     DEBUG_SERIAL.print("Array Contents: ");
     DEBUG_SERIAL.println(receivedMessage[i],HEX);
     DEBUG_SERIAL.print("Raw Serial Read Byte: ");
     DEBUG_SERIAL.println(incomingByte,HEX);
-    
+    */
     
     i=i+1;                                          // Increment array index
 
@@ -133,7 +134,7 @@ void loop() {
     DEBUG_SERIAL.print("Decoded Message: ");
     DEBUG_SERIAL.println(receivedInt);
     DEBUG_SERIAL.print("Current Motor Position: ");
-    DEBUG_SERIAL.println(present_position); //Far: 2854, Near: 2553
+    DEBUG_SERIAL.println(present_position); //Far: 2854, Near: 2409 
     DEBUG_SERIAL.println();
     }
   }
